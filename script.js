@@ -1,5 +1,6 @@
-const apiKey = 'ВСТАВЬТЕ СВОЙ API-KEY';
-const apiUrl = 'https://api.truecaller.com/v1/search';
+// script.js
+const apiKey = 'num_live_yXwoyXZi55NgTG6PraJwlVHEEe4Gv8hYXkurIPFe';
+const apiUrl = 'https://api.numlookupapi.com/v1/phone';
 
 const phoneNumberInput = document.getElementById('phone-number');
 const searchForm = document.getElementById('search-form');
@@ -18,25 +19,11 @@ searchForm.addEventListener('submit', async (event) => {
   loadingDiv.style.display = 'block';
   resultsDiv.innerHTML = '';
 
-  // Проверяем кэш
-  const cachedResult = localStorage.getItem(phoneNumber);
-  if (cachedResult) {
-    displayResults(JSON.parse(cachedResult));
-    loadingDiv.style.display = 'none';
-    return;
-  }
-
   try {
-    const response = await fetch(`${apiUrl}?phone=${phoneNumber}&apikey=${apiKey}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(`${apiUrl}/${phoneNumber}?apikey=${apiKey}`);  
     if (!response.ok) throw new Error('Ошибка при получении данных');
     const data = await response.json();
 
-    // Со храняем результат в кэш
-    localStorage.setItem(phoneNumber, JSON.stringify(data));
     displayResults(data);
   } catch (error) {
     console.error(error);
@@ -49,7 +36,6 @@ searchForm.addEventListener('submit', async (event) => {
 clearButton.addEventListener('click', () => {
   phoneNumberInput.value = '';
   resultsDiv.innerHTML = '';
-  localStorage.clear(); // Очистка кэша
 });
 
 function validatePhoneNumber(phoneNumber) {
